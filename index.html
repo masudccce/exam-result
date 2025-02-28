@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Result</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input, button { padding: 10px; margin: 10px; }
+        #result { margin-top: 20px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h2>Check Your Exam Result</h2>
+    <input type="text" id="rollInput" placeholder="Enter Roll Number">
+    <button onclick="fetchResult()">Check Result</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function fetchResult() {
+            var roll = document.getElementById("rollInput").value;
+            var apiUrl = "https://script.google.com/macros/s/AKfycbwoMgZwNr6zWRROjtggvtIomzj-J_enYVaYQ43ci4qi4ciCEe_E6iZCxPrDUhOvpFGE/exec
+?roll=" + roll; // এখানে আপনার API URL বসান
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.Roll) {
+                        document.getElementById("result").innerHTML = `
+                            <h3>Result for Roll: ${data.Roll}</h3>
+                            <p><b>Name:</b> ${data.Name}</p>
+                            <p><b>Math:</b> ${data.Math}</p>
+                            <p><b>English:</b> ${data.English}</p>
+                            <p><b>Science:</b> ${data.Science}</p>
+                            <p><b>Total Marks:</b> ${data.Total}</p>
+                            <p><b>Grade:</b> ${data.Grade}</p>
+                        `;
+                    } else {
+                        document.getElementById("result").innerHTML = "<p style='color:red;'>No result found!</p>";
+                    }
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
+    </script>
+</body>
+</html>
