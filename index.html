@@ -19,9 +19,13 @@
 
     <script>
         function fetchResult() {
-            var roll = document.getElementById("rollInput").value;
-            var apiUrl = "https://script.google.com/macros/s/AKfycbwoMgZwNr6zWRROjtggvtIomzj-J_enYVaYQ43ci4qi4ciCEe_E6iZCxPrDUhOvpFGE/exec
-?roll=" + roll; // এখানে আপনার API URL বসান
+            var roll = document.getElementById("rollInput").value.trim();
+            if (roll === "") {
+                alert("Please enter a roll number!");
+                return;
+            }
+            
+            var apiUrl = "https://script.google.com/macros/s/AKfycbwoMgZwNr6zWRROjtggvtIomzj-J_enYVaYQ43ci4qi4ciCEe_E6iZCxPrDUhOvpFGE/exec?roll=" + encodeURIComponent(roll);
             
             fetch(apiUrl)
                 .then(response => response.json())
@@ -40,8 +44,6 @@
                         document.getElementById("result").innerHTML = "<p style='color:red;'>No result found!</p>";
                     }
                 })
-                .catch(error => console.error("Error fetching data:", error));
-        }
-    </script>
-</body>
-</html>
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+              
