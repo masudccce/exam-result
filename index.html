@@ -3,54 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Result</title>
+    <title>Exam Result Checker</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        input, button { padding: 10px; margin: 10px; }
-        #result { margin-top: 20px; font-size: 18px; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 50%;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
+
     <h2>Check Your Exam Result</h2>
     <input type="text" id="rollInput" placeholder="Enter Roll Number">
-    <button id="checkResultBtn">Check Result</button>
-    
-    <div id="result"></div>
+    <button onclick="fetchResult()">Check Result</button>
+
+    <div id="resultTable"></div>
 
     <script>
-        document.getElementById("checkResultBtn").addEventListener("click", fetchResult);
-
-        function fetchResult() {
-            var roll = document.getElementById("rollInput").value.trim();
-            if (roll === "") {
+        async function fetchResult() {
+            let roll = document.getElementById("rollInput").value;
+            if (!roll) {
                 alert("Please enter a roll number!");
                 return;
             }
 
-            var apiUrl = "https://script.google.com/macros/s/AKfycbwoMgZwNr6zWRROjtggvtIomzj-J_enYVaYQ43ci4qi4ciCEe_E6iZCxPrDUhOvpFGE/exec?roll=" + encodeURIComponent(roll);
+            let response = await fetch(`https://script.google.com/macros/s/আপনার_API_URL/exec?roll=${roll}`);
+            let data = await response.json();
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.Roll) {
-                        document.getElementById("result").innerHTML = `
-                            <h3>Result for Roll: ${data.Roll}</h3>
-                            <p><b>Name:</b> ${data.Name}</p>
-                            <p><b>Math:</b> ${data.Math}</p>
-                            <p><b>English:</b> ${data.English}</p>
-                            <p><b>Science:</b> ${data.Science}</p>
-                            <p><b>Total Marks:</b> ${data.Total}</p>
-                            <p><b>Grade:</b> ${data.Grade}</p>
-                        `;
-                    } else {
-                        document.getElementById("result").innerHTML = "<p style='color:red;'>No result found!</p>";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching data:", error);
-                    document.getElementById("result").innerHTML = "<p style='color:red;'>Failed to fetch result. Try again!</p>";
-                });
+            if (data.error) {
+                document.getElementById("resultTable").innerHTML = `<p style="color:red;">${data.error}</p>`;
+                return;
+            }
+
+            let resultHTML = `
+                <h3>Result for Roll: ${data.roll}</h3>
+                <table>
+                    <tr><th>Name</th><td>${data.name}</td></tr>
+                    <tr><th>Math</th><td>${data.math}</td></tr>
+                    <tr><th>English</th><td>${data.english}</td></tr>
+                    <tr><th>Science</th><td>${data.science}</td></tr>
+                    <tr><th>Total Marks</th><td>${data.total}</td></tr>
+                    <tr><th>Grade</th><td>${data.grade}</td></tr>
+                </table>
+            `;
+            document.getElementById("resultTable").innerHTML = resultHTML;
         }
     </script>
+
 </body>
 </html>
