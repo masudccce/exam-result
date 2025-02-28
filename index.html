@@ -34,13 +34,15 @@
                 .then(data => {
                     if (data.Roll) {
                         document.getElementById("result").innerHTML = `
-                            <h3>Result for Roll: ${data.Roll}</h3>
-                            <p><b>Name:</b> ${data.Name}</p>
-                            <p><b>Math:</b> ${data.Math}</p>
-                            <p><b>English:</b> ${data.English}</p>
-                            <p><b>Science:</b> ${data.Science}</p>
-                            <p><b>Total Marks:</b> ${data.Total}</p>
-                            <p><b>Grade:</b> ${data.Grade}</p>
+                            <h3>Result for Roll: ${data.roll}</h3>
+                <table>
+                    <tr><th>Name</th><td>${data.name}</td></tr>
+                    <tr><th>Math</th><td>${data.math}</td></tr>
+                    <tr><th>English</th><td>${data.english}</td></tr>
+                    <tr><th>Science</th><td>${data.science}</td></tr>
+                    <tr><th>Total Marks</th><td>${data.total}</td></tr>
+                    <tr><th>Grade</th><td>${data.grade}</td></tr>
+                </table>
                         `;
                     } else {
                         document.getElementById("result").innerHTML = "<p style='color:red;'>No result found!</p>";
